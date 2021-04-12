@@ -378,6 +378,10 @@ public abstract class HystrixCommand<R> extends AbstractCommand<R> implements Hy
          * 把 command 对象放入线程池，并且获得对应执行线程的一个 Future 对象
          * 这里获得的 Future，没有办法因为中断，超时，业务异常等异常信息，来终止对应 Future 线程的执行的
          * 所以接下来需要对返回的 delegateFuture 进行包装，也就是增强
+         *
+         * toObservable() 方法实际上就是创建一个 Observable 对象
+         * 真正的执行逻辑在 toBlocking 方法里，但是这是 rxJava 的方法，看它就是看 rxJava 的源码了，没必要其实
+         * 实际上会执行的逻辑，都已经被封装到 Observable 对象里了
          */
         final Future<R> delegate = toObservable().toBlocking().toFuture();
     	
