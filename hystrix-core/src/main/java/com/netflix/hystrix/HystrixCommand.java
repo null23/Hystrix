@@ -374,6 +374,10 @@ public abstract class HystrixCommand<R> extends AbstractCommand<R> implements Hy
          * The Future returned by Observable.toBlocking().toFuture() does not implement the
          * interruption of the execution thread when the "mayInterrupt" flag of Future.cancel(boolean) is set to true;
          * thus, to comply with the contract of Future, we must wrap around it.
+         *
+         * 把 command 对象放入线程池，并且获得对应执行线程的一个 Future 对象
+         * 这里获得的 Future，没有办法因为中断，超时，业务异常等异常信息，来终止对应 Future 线程的执行的
+         * 所以接下来需要对返回的 delegateFuture 进行包装，也就是增强
          */
         final Future<R> delegate = toObservable().toBlocking().toFuture();
     	
